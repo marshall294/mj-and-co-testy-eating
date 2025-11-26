@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,6 +40,45 @@
       line-height: 1.6;
       -webkit-tap-highlight-color: transparent;
     }
+/* HIDE mobile menu by default */
+.hamburger {
+  display: none;
+  font-size: 32px;
+  cursor: pointer;
+  padding: 8px 14px;
+}
+
+/* MOBILE MENU */
+.nav-mobile {
+  display: none;
+  flex-direction: column;
+  background: white;
+  padding: 10px 14px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  margin-top: 10px;
+}
+
+.nav-mobile a {
+  padding: 12px 0;
+  font-size: 18px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* LAST LINK NO BORDER */
+.nav-mobile a:last-child {
+  border-bottom: none;
+}
+
+/* ---------- MOBILE RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .nav-desktop {
+    display: none !important;
+  }
+  .hamburger {
+    display: block;
+  }
+}
 
     /* MAIN LAYOUT: everything centered inside a max-width container */
     .site-wrap {
@@ -337,12 +377,26 @@
         </div>
       </div>
 
-      <nav aria-label="Main navigation">
-        <a href="order.html">Order Now</a>
-        <a href="about.html">About Us</a>
-        <a href="contact.html">Contact</a>
-        <a class="order-btn" href="order.html">Place Order</a>
-      </nav>
+<nav class="nav-desktop">
+  <a href="order.html">Order Now</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+  <a class="order-btn" href="order.html">Place Order</a>
+</nav>
+
+<!-- MOBILE MENU BUTTON -->
+<div class="hamburger" id="hamburgerBtn">
+  ☰
+</div>
+
+<!-- MOBILE MENU -->
+<nav class="nav-mobile" id="mobileMenu">
+  <a href="order.html">Order Now</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+  <a class="order-btn" href="order.html">Place Order</a>
+</nav>
+
     </header>
 
     <!-- HERO -->
@@ -563,6 +617,15 @@
        - Removed oncontextmenu blocking.
        - The page itself includes standard links; the footer social links are plain links (no forced https-only enforcement in HTML).
        Browser-level network restrictions (mixed content, HTTPS enforcement by the browser) are outside of what HTML can override for security reasons. This markup does not include any explicit content security policy, so it allows browser-default loading behavior. */
+
+  const hamburgerBtn = document.getElementById("hamburgerBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  hamburgerBtn.addEventListener("click", () => {
+    mobileMenu.style.display =
+      mobileMenu.style.display === "flex" ? "none" : "flex";
+  });
+
 
   </script>
 </body>
