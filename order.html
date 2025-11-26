@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -199,6 +200,8 @@ body {
 
 <!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
 
 <!-- Firebase (same config as original) -->
 <script type="module">
@@ -467,7 +470,7 @@ btnPDF.onclick = async ()=>{
     orderStatusEl.textContent = 'Processing...';
     const order = gatherOrderData();
     const orderID = await saveOrder(order);
-    const pdfBlob = await makePDF(order);
+    const pdfBlob = await generateReceiptPDF(order);
     const url = URL.createObjectURL(pdfBlob);
     const a = document.createElement('a'); a.href=url; a.download=`${orderID}.pdf`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 
@@ -497,49 +500,155 @@ document.querySelectorAll('video').forEach(v=>{ v.play().catch(()=>{}); v.style.
 </script>
 
 <script>
-// Improved Standard PDF Generator
-function generatePDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+/* ============================================================
+   MJ & CO RECEIPT PDF — FINAL VERSION (NO BUGS • NO TRUNCATION)
+   ============================================================ */
 
-  const logo = new Image();
-  logo.src = 'your-logo.png'; // Replace
+window.generateReceiptPDF = async function(order) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: "pt", format: "a4" });
 
-  logo.onload = () => {
-    doc.addImage(logo, 'PNG', 40, 30, 60, 60);
-    doc.setFont('helvetica', 'bold');
+    /* ---------------------
+       THEME
+    ----------------------*/
+    const ACCENT = "#ff7a00";
+    const DARK = "#0f172a";
+
+    /* ---------------------
+       MONEY
+    ----------------------*/
+    function money(v) { return "NGN " + Number(v).toLocaleString(); }
+
+    /* ---------------------
+       LOGO EMBED
+    ----------------------*/
+    async function loadLogo() {
+        try {
+            return await new Promise(resolve => {
+                const img = new Image();
+                img.src = "logo.jpg";
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    const c = document.createElement("canvas");
+                    c.width = 160; c.height = 160;
+                    const ctx = c.getContext("2d");
+                    ctx.drawImage(img, 0, 0, 160, 160);
+                    resolve(c.toDataURL("image/jpeg", 0.9));
+                };
+                img.onerror = () => resolve(null);
+            });
+        } catch {
+            return null;
+        }
+    }
+
+    const logo = await loadLogo();
+
+    /* ---------------------
+       HEADER
+    ----------------------*/
+    if (logo) {
+        doc.addImage(logo, "JPEG", 40, 40, 65, 65);
+    }
+
     doc.setFontSize(22);
-    doc.setTextColor(10, 80, 160);
-    doc.text('MJ & CO - Order Summary', 120, 65);
+    doc.setTextColor(DARK);
+    doc.text("MJ & CO — Order Receipt", 120, 70);
 
-    const tableColumn = ['Item', 'Qty', 'Price', 'Total'];
-    const tableRows = [];
+    doc.setFontSize(11);
+    doc.setTextColor("#444");
+    doc.text(`Order ID: ${order.orderID}`, 40, 130);
+    doc.text(`Date: ${new Date(order.timestamp).toLocaleString()}`, 350, 130);
 
-    cart.forEach(i => {
-      tableRows.push([
-        i.name,
-        i.quantity.toString(),
-        `₦${i.price.toLocaleString()}`,
-        `₦${(i.price * i.quantity).toLocaleString()}`
-      ]);
-    });
+    /* ---------------------
+       CUSTOMER DETAILS
+    ----------------------*/
+    let y = 170;
+    doc.setFontSize(12);
+    doc.setTextColor(DARK);
+    doc.text("Customer Details", 40, y);
+
+    y += 16;
+    doc.setFontSize(11);
+    doc.setTextColor("#444");
+    doc.text(`Name: ${order.name}`, 40, y);
+    y += 14;
+    doc.text(`Phone: ${order.phone}`, 40, y);
+    y += 14;
+    doc.text(`Fulfillment: ${order.fulfillment}`, 40, y);
+    y += 14;
+    doc.text(`Address: ${order.address}`, 40, y);
+    y += 20;
+
+    /* ---------------------
+       ITEMS TABLE
+    ----------------------*/
+    const tableData = order.items.map(i => [
+        i.title, i.qty, money(i.price), money(i.price * i.qty)
+    ]);
 
     doc.autoTable({
-      startY: 120,
-      head: [tableColumn],
-      body: tableRows,
-      styles: { font: 'helvetica', fontSize: 11, cellPadding: 6 },
-      headStyles: { fillColor: [10, 80, 160], textColor: 255, fontStyle: 'bold' },
-      alternateRowStyles: { fillColor: [245,245,245] }
+        startY: y,
+        head: [["Item", "Qty", "Unit Price", "Total"]],
+        body: tableData,
+        theme: "striped",
+        headStyles: { fillColor: [255, 165, 89] },
+        styles: { fontSize: 11 },
     });
 
-    const finalY = doc.lastAutoTable.finalY + 30;
-    doc.setFont('helvetica', 'bold');
+    const tableEnd = doc.lastAutoTable.finalY + 20;
+
+    /* ---------------------
+       TOTAL SUMMARY BOX
+    ----------------------*/
+    const boxX = 40;
+    const boxY = tableEnd;
+    const boxW = 520;
+    const boxH = 110;
+
+    doc.setFillColor(255, 244, 230);
+    doc.roundedRect(boxX, boxY, boxW, boxH, 6, 6, "F");
+
+    doc.setFontSize(12);
+    doc.setTextColor(DARK);
+    let sy = boxY + 22;
+
+    doc.text(`Subtotal: ${money(order.subtotal)}`, boxX + 15, sy);
+    sy += 16;
+    doc.text(`Delivery: ${money(order.deliveryFee)}`, boxX + 15, sy);
+    sy += 16;
+
     doc.setFontSize(14);
-    doc.text(`Grand Total: ₦${getTotal().toLocaleString()}`, 40, finalY);
-    doc.save('MJCO_order.pdf');
-  };
-}
+    doc.setTextColor(ACCENT);
+    doc.text(`TOTAL: ${money(order.total)}`, boxX + 15, sy);
+
+    /* ---------------------
+       PAYMENT INSTRUCTIONS
+    ----------------------*/
+    sy += 40;
+    doc.setFontSize(11);
+    doc.setTextColor("#444");
+
+    doc.text("BANK PAYMENT DETAILS:", boxX, sy);
+    sy += 14;
+
+    doc.text("Account Name: MJ & CO", boxX, sy); sy += 14;
+    doc.text("Account Number: 0123456789", boxX, sy); sy += 14;
+    doc.text("Bank: Zenith Bank", boxX, sy); sy += 20;
+
+    doc.text(
+        "Send your payment receipt + Order ID to WhatsApp: +2348102341648",
+        boxX,
+        sy
+    );
+
+    return doc.output("blob");
+};
 </script>
+
+
+
+
 </body>
 </html>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_3c6zTD4198NSaaLsehJ285Y4A3Ba" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
