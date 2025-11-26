@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About MJ & CO — Fresh Yogurt & Parfait</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 90px 20px 40px;
+      animation: fadeIn 2s ease;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      animation: slideDown 1.8s ease;
+    }
+
+    p.subtitle {
+      font-size: 1.3rem;
+      opacity: 0.9;
+      max-width: 800px;
+      margin: 20px auto 0;
+      animation: fadeIn 3s ease;
+      line-height: 1.7;
+    }
+
+    /* Sections */
+    section {
+      padding: 70px 20px;
+      max-width: 1100px;
+      margin: auto;
+      text-align: center;
+      animation: fadeIn 2.5s ease;
+    }
+
+    h2 {
+      font-size: 2.4rem;
+      margin-bottom: 25px;
+      animation: slideDown 1.8s ease;
+    }
+
+    p.text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 900px;
+      margin: auto;
+      opacity: 0.95;
+    }
+
+    /* Value Cards */
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 15px;
+      padding: 30px;
+      width: 300px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      animation: zoomIn 1.5s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-12px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    }
+
+    /* Team Section */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .team-card {
+      padding: 25px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      backdrop-filter: blur(8px);
+      animation: fadeIn 2s ease;
+    }
+
+    .team-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 15px;
+    }
+
+    .team-card h3 {
+      margin: 15px 0 5px;
+    }
+
+    /* Story Section */
+    .story-box {
+      background: rgba(255,255,255,0.08);
+      padding: 40px;
+      border-radius: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      animation: fadeIn 2.5s ease;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px;
+      opacity: 0.85;
+      font-size: 0.95rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Stars Background */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle 5s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <audio autoplay loop>
+    <source src="song.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="stars" id="stars"></div>
+
+  <header>
+    <h1>About MJ & CO</h1>
+    <p class="subtitle">Fresh • Healthy • Natural — Delivering the best yogurt, parfait and healthy treats to your doorstep.</p>
+  </header>
+
+  <section>
+    <h2>Our Story</h2>
+    <div class="story-box">
+      <p class="text">
+        MJ & CO began with one simple mission: to make healthy eating accessible, delicious, and exciting for everyone. What started as a small vision has grown into a fast‑rising brand known for premium yogurt, beautifully layered parfaits, fresh toppings, and a dedication to natural, nourishing ingredients.
+        <br><br>
+        Our team believes healthy food should never be boring. That’s why we craft every cup with passion — from selecting rich Greek-style yogurt, to choosing the finest fruits, nuts, granola, and blends that give each serving a refreshing burst of flavor.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What We Offer</h2>
+    <div class="card-container">
+      <div class="card">
+        <h3>Premium Yogurt</h3>
+        <p>Thick, creamy, refreshing — made fresh and perfect for every moment.</p>
+      </div>
+
+      <div class="card">
+        <h3>Parfaits</h3>
+        <p>Layered goodness with fruits, granola, nuts, syrups and healthy toppings.</p>
+      </div>
+
+      <div class="card">
+        <h3>Fast Delivery</h3>
+        <p>Order online, pay securely, receive your healthy treat in minutes.</p>
+      </div>
+
+      <div class="card">
+        <h3>Healthy Lifestyle</h3>
+        <p>We promote clean eating, freshness, and nourishing daily habits.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Our Core Values</h2>
+    <div class="card-container">
+      <div class="card"><h3>Freshness</h3><p>Only fresh fruits, real yogurt, and natural ingredients.</p></div>
+      <div class="card"><h
