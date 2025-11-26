@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MJ & CO</title>
+  <link rel="icon" type="image/png" href="logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#ff7a00;
+      --accent-2:#ff4d00;
+      --muted:#6b7280;
+      --bg:#fff8f2;
+      --card:#ffffff;
+      --glass: rgba(255,255,255,0.7);
+      --radius:16px;
+      --maxw:1200px;
+      --shadow: 0 10px 30px rgba(16,24,40,0.08);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%; margin:0; background:var(--bg); color:#0f172a;}
+    body{display:flex; flex-direction:column;}
+    .wrap{width:100%; max-width:var(--maxw); display:grid; grid-template-columns: 1fr 380px; gap:24px;}
+    @media (max-width:980px){ .wrap{grid-template-columns:1fr; padding-bottom:60px;} .sticky-sidebar{position:static;} }
+    .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px;}
+    header.top{display:flex; gap:14px; align-items:center;}
+    .logo-ring {width:100px;height:100px;border-radius:50%;display:flex;justify-content:center;align-items:center;animation:spin 8s linear infinite;box-shadow:0 0 15px #ffb86144;margin-bottom:8px;}
+    .logo-ring img {width:100px;height:100px;border-radius:50%;}
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    h1{margin:0;font-size:26px;color:blue;text-align:center;}
+    h2,h3{margin:0;font-size:20px;color:green;text-align:center;}
+    .tag{font-size:13px;color:green;text-align:center;}
+    .controls{display:flex;gap:12px;align-items:center;margin:16px 0;flex-wrap:wrap;}
+    .search{flex:1;display:flex;align-items:center;background:var(--glass);padding:10px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);}
+    .search input{border:0;outline:none;background:transparent;font-size:14px;width:100%}
+    .filters{display:flex;gap:8px;}
+    .chip{padding:8px 12px;border-radius:999px;background:var(--bg);border:1px solid rgba(0,0,0,0.05);font-size:13px;cursor:pointer;color:green;}
+    .products{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+    @media (max-width:680px){ .products{grid-template-columns:1fr} }
+    .product{display:flex;gap:12px;padding:12px;border-radius:12px;background:linear-gradient(180deg,#ffffff,#fffaf5);align-items:center;border:1px solid rgba(0,0,0,0.03);}
+    .product .img{width:110px;height:100px;border-radius:12px;overflow:hidden;flex-shrink:0;}
+    .product img{width:100%;height:100%;object-fit:cover;display:block;}
+    .meta h3{margin:0;font-size:16px;}
+    .meta p{margin:6px 0 0 0;color:var(--muted);font-size:13px;}
+    .price{font-weight:700;color:green;margin-left:auto;}
+    .qty-control{display:flex;align-items:center;border-radius:10px;border:1px solid rgba(0,0,0,0.06);overflow:hidden;}
+    .qty-control button{border:0;background:transparent;padding:8px 10px;cursor:pointer;font-weight:700;}
+    .qty-control span{min-width:36px;text-align:center;padding:8px 6px;background:rgba(0,0,0,0.03);}
+    .sticky-sidebar{position:sticky;top:24px;}
+    .summary h2{margin:0 0 10px 0;}
+    .summary .items{min-height:120px;}
+    .line{display:flex;justify-content:space-between;color:var(--muted);margin:8px 0;}
+    .total{display:flex;justify-content:space-between;font-size:20px;font-weight:800;}
+    .form-row{display:flex;gap:8px;}
+    .form-row .col{flex:1;}
+    input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:14px;}
+    .btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 14px;border-radius:12px;border:0;cursor:pointer;font-weight:700;box-shadow:0 10px 25px rgba(255,122,0,0.16);}
+    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06);box-shadow:none;}
+    .btn.small{padding:8px 10px;font-size:13px;border-radius:10px;}
+    footer.foot{text-align:center;color:black;padding:12px;font-size:18px;}
+    .media-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+    .media-row img, .media-row video{height:70px;border-radius:8px;object-fit:cover;}
+/* === MJ & CO Product Visual Enhancements === */
+body {
+  font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+  background: linear-gradient(180deg, #fff, #fff8f2);
+  color: #222;
+}
+
+.meta h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 17px;
+  color: #1e40af; /* deep blue */
+  font-weight: 600;
+}
+
+.meta p {
+  font-size: 13.5px;
+  color: #475569; /* cool gray */
+  font-style: italic;
+}
+
+.price {
+  color: #047857; /* emerald green */
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.product {
+  background: linear-gradient(180deg, #ffffff, #fff9f3);
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.product:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(255,122,0,0.15);
+}
+
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <main>
+    <div class="card">
+      <header class="top">
+        <div class="logo-ring"><img src="logo.jpg" /></div>
+        <div>
+          <h1>MJ & CO</h1>
+          <h2>Tasty, Refreshing, Healthy Eating</h2>
+          <div class="tag">Order online • Download invoice PDF • Pay to bank • Send receipt to WhatsApp: <strong>+2348102341648</strong></div>
+        </div>
+      </header>
+
+      <div class="controls">
+        <div class="search">
+          <input id="q" placeholder="Search yogurt, parfait or granola, flakes, chops..." />
+          <button class="btn small" id="clearSearch" style="display:none">Clear</button>
+        </div>
+        <div class="filters">
+          <div class="chip" data-filter="all">All</div>
+          <div class="chip" data-filter="yogurt">Yogurt</div>
+          <div class="chip" data-filter="parfait">Parfait</div>
+          <div class="chip" data-filter="granola">Granola</div>
+          <div class="chip" data-filter="flakes">Flakes</div>
+          <div class="chip" data-filter="chops">Chops</div>
+        </div>
+      </div>
+
+      <div class="products card" id="productList" style="padding:14px;box-shadow:none;background:transparent;border:0"></div>
+
+      <div class="card" style="margin-top:14px">
+        <h4>Special Instructions (Optional)</h4>
+        <textarea id="instructions" rows="1" placeholder="E.g. No sugar / extra granola"></textarea>
+        <div class="media-row" id="sampleMedia">
+          <img src="https://feelgoodfoodie.net/wp-content/uploads/2024/11/Fruit-Yogurt-Parfait-11.jpg" alt="sample">
+          <img src="granola.jpg" alt="sample">
+          <img src="coconut-flakes.jpg" alt="sample">
+          <img src="m6.jpg" alt="sample">
+          <img src="chops.jpg" alt="sample">
+          <img src="fura.png" alt="sample">
+          <video src="sample-video.mp4" muted loop></video>
+        </div>
+      </div>
+    </div>
+    <!-- Contact & delivery -->
+    <div class="card" style="margin-top:16px">
+      <h3>Contact & Delivery</h3>
+      <div style="display:grid;gap:10px">
+        <input id="name" placeholder="Full name (required)" />
+        <input id="phone" placeholder="Phone number (required)" />
+        <div class="form-row">
+          <select id="fulfillment">
+            <option value="delivery">Delivery</option>
+            <option value="pickup">Pickup (in-store)</option>
+          </select>
+          <input id="address" placeholder="Delivery address (required for delivery)" />
+        </div>
+        <div class="form-row">
+          <input type="datetime-local" id="deliveryTime" />
+          <select id="paymentMethod">
+            <option value="bank">Bank Transfer</option>
+            <option value="pod">Pay on Delivery</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+          <button class="btn" id="placeOrderBtn">Place Order & Generate PDF</button>
+          <button class="btn ghost" id="saveOrderBtn">Place Order (Pay on Delivery)</button>
+          <button class="btn small" id="previewPdfBtn">Preview PDF</button>
+          <button class="btn small" id="openWhatsAppBtn" style="background:#25D366;display:none">Open WhatsApp</button>
+        </div>
+        <div id="orderStatus" class="small muted"></div>
+      </div>
+    </div>
+    <footer class="foot card" style="margin-top:12px">MJ & CO — CARES</footer>
+  </main>
+
+  <aside class="sticky-sidebar">
+    <div class="card summary">
+      <h2>Order Summary</h2>
+      <div class="items" id="summaryList"></div>
+      <div class="line"><span>Subtotal</span><span id="subtotal">₦0</span></div>
+      <div class="line"><span>Delivery</span><span id="deliveryFee">₦0</span></div>
+      <div class="total"><span>Total</span><span id="total">₦0</span></div>
+      <div class="small muted">After generating receipt in PDF, send the PDF or screenshot + Payment receipt to WhatsApp <strong>+2348102341648</strong> for confirmation</div>
+    </div>
+  </aside>
+</div>
+
+<!-- External JS -->
+<script src="music.js" type="module"></script>
+<script type="module">
+  import { initBackgroundMusic } from './music.js';
+  initBackgroundMusic('song.mp3');
+</script>
+
+
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Firebase (same config as original) -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getDatabase, ref as dbRef, push, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBSM1gw5QpHJ6PMPG9gCuYDQ9WZ4MUcu0A",
+  authDomain: "hotel-5c90a.firebaseapp.com",
+  databaseURL: "https://hotel-5c90a-default-rtdb.firebaseio.com",
+  projectId: "hotel-5c90a",
+  storageBucket: "hotel-5c90a.appspot.com",
+  messagingSenderId: "1018416176032",
+  appId: "1:1018416176032:web:2f57a167fa1106c8b022c5"
+};
+
+const BANK = {
+  accountName: "MJ & CO",
+  accountNumber: "0123456789",
+  bankName: "Zenith Bank"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// improved products list (same images + extras) -- you can replace URLs with your hosted images
+const products = [
+  { 
+    id: 'greek', 
+    title: 'Greek Yogurt (500 ml)', 
+    price: 1200, 
+    tag: 'yogurt', 
+    desc: 'Thick, rich, and protein-packed Greek yogurt—perfectly smooth and refreshing.', 
+    img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSbe-EVNYGlLGh4FO1QjDyJLxkCpKsrYjxHQ&s' 
+  },
+  { 
+    id: 'parfait', 
+    title: 'Fruit Parfait', 
+    price: 1600, 
+    tag: 'parfait', 
+    desc: 'Creamy yogurt layered with crunchy granola and a medley of fresh fruits for a wholesome delight.', 
+    img: 'https://feelgoodfoodie.net/wp-content/uploads/2024/11/Fruit-Yogurt-Parfait-11.jpg' 
+  },
+  { 
+    id: 'granola', 
+    title: 'Granola Bowl', 
+    price: 900, 
+    tag: 'granola', 
+    desc: 'A crunchy mix of golden oats, nuts, and honey—best enjoyed with milk or yogurt.', 
+    img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwmfXUDTOOERyxIClG0hiSIw1jsPfm8_uTHA&s' 
+  },
+  { 
+    id: 'regular250', 
+    title: 'Regular Yogurt (250 ml)', 
+    price: 600, 
+    tag: 'yogurt', 
+    desc: 'Classic smooth yogurt, lightly sweetened for everyday freshness.', 
+    img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPGXbLnX8UZAO5hm8os15n0Yu69WvO9fkdbw&s' 
+  },
+  { 
+    id: 'vanilla60', 
+    title: 'Vanilla / Strawberry Yogurt (60 cl)', 
+    price: 3000, 
+    tag: 'yogurt', 
+    desc: 'Silky vanilla or strawberry-flavored yogurt, rich and perfectly chilled.', 
+    img: 'm6.jpg' 
+  },
+  { 
+    id: 'vanilla40', 
+    title: 'Vanilla / Strawberry Yogurt (40 cl)', 
+    price: 2000, 
+    tag: 'yogurt', 
+    desc: 'Deliciously creamy yogurt in your favorite vanilla or strawberry flavor.', 
+    img: 'm6.jpg' 
+  },
+  { 
+    id: 'popsicle5', 
+    title: 'Mini Popsicles (5 pcs +)', 
+    price: 12000, 
+    tag: 'parfait', 
+    desc: 'Frozen yogurt pops—sweet, creamy, and fun for every occasion.', 
+    img: 'popsicle.jpg' 
+  },
+  { 
+    id: 'popsicle50', 
+    title: 'Party Popsicles (50 pcs +)', 
+    price: 50000, 
+    tag: 'parfait', 
+    desc: 'Large-batch creamy popsicles, perfect for events, birthdays, and celebrations.', 
+    img: 'popsicle.jpg' 
+  },
+  { 
+    id: 'fura', 
+    title: 'Fura Yogurt (50 cl)', 
+    price: 3000, 
+    tag: 'yogurt', 
+    desc: 'Traditional fura blended into creamy yogurt—rich in taste and nutrition.', 
+    img: 'fura.png' 
+  },
+  { 
+    id: 'flakes100', 
+    title: 'Coconut Flakes (100 g)', 
+    price: 3500, 
+    tag: 'flakes', 
+    desc: 'Lightly toasted coconut flakes, available sweetened or unsweetened.', 
+    img: 'coconut-flakes.jpg' 
+  },
+  { 
+    id: 'flakes180', 
+    title: 'Coconut Flakes (180 g)', 
+    price: 6500, 
+    tag: 'flakes', 
+    desc: 'Crispy, golden coconut flakes for snacking or parfait topping.', 
+    img: 'coconut-flakes.jpg' 
+  },
+  { 
+    id: 'flakes200', 
+    title: 'Coconut Flakes (200 g)', 
+    price: 7000, 
+    tag: 'flakes', 
+    desc: 'Large-pack premium coconut flakes—sweet or unsweet, your choice.', 
+    img: 'coconut-flakes.jpg' 
+  },
+  { 
+    id: 'chops1', 
+    title: 'Chops Box A', 
+    price: 1800, 
+    tag: 'chops', 
+    desc: 'Puff × 3, Samosa × 1, Spring Roll × 1, Mosa × 1 — freshly fried and flavorful.', 
+    img: 'chops.jpg' 
+  },
+  { 
+    id: 'chops2', 
+    title: 'Chops Box B', 
+    price: 2000, 
+    tag: 'chops', 
+    desc: 'Puff × 4, Samosa × 1, Spring Roll × 1, Mosa × 2 — the perfect tasty combo.', 
+    img: 'chops.jpg' 
+  },
+  { 
+    id: 'chops3', 
+    title: 'Chops Box C', 
+    price: 2500, 
+    tag: 'chops', 
+    desc: 'Puff × 4, Samosa × 1, Spring Roll × 1, Chicken / Beef × 1 — party favorite mix.', 
+    img: 'chops.jpg' 
+  },
+  { 
+    id: 'chops4', 
+    title: 'Chops Box D', 
+    price: 3500, 
+    tag: 'chops', 
+    desc: 'Puff × 3, Samosa × 1, Spring Roll × 1, Chicken / Beef Kebab × 1 — rich and spicy delight.', 
+    img: 'chops.jpg' 
+  }
+];
+
+
+
+const cart = {};
+const productListEl = document.getElementById('productList');
+const summaryListEl = document.getElementById('summaryList');
+const subtotalEl = document.getElementById('subtotal');
+const deliveryFeeEl = document.getElementById('deliveryFee');
+const totalEl = document.getElementById('total');
+const orderStatusEl = document.getElementById('orderStatus');
+
+function money(n){ return '₦' + Number(n).toLocaleString(); }
+
+// render UI
+function renderProducts(filter='all', query=''){
+  productListEl.innerHTML='';
+  const list = products.filter(p=> (filter==='all' || p.tag===filter) && p.title.toLowerCase().includes(query.toLowerCase()));
+  list.forEach(p=>{
+    const el = document.createElement('div'); el.className='product';
+    el.innerHTML = `
+      <div class="img"><img src="${p.img}" alt="${p.title}" loading="lazy"></div>
+      <div class="meta">
+        <h3>${p.title}</h3>
+        <p>${p.desc}</p>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+          <div class="qty-control" data-id="${p.id}">
+            <button class="dec">−</button>
+            <span id="qty-${p.id}">${cart[p.id]||0}</span>
+            <button class="inc">+</button>
+          </div>
+          <div class="small muted">${p.tag.toUpperCase()}</div>
+          <div class="price">${money(p.price)}</div>
+        </div>
+      </div>
+    `;
+    productListEl.appendChild(el);
+  });
+
+  // add listeners
+  document.querySelectorAll('.qty-control button').forEach(btn=>{
+    btn.onclick = (e)=>{
+      const wrapper = btn.closest('.qty-control');
+      const id = wrapper.dataset.id;
+      changeQty(id, btn.classList.contains('inc')?1:-1);
+    }
+  });
+}
+
+function changeQty(id, delta){ if(!cart[id]) cart[id]=0; cart[id]=Math.max(0, cart[id]+delta); document.getElementById('qty-'+id).textContent = cart[id]; updateSummary(); }
+
+function updateSummary(){
+  summaryListEl.innerHTML=''; let subtotal=0;
+  for(const id in cart){ if(cart[id]<=0) continue; const p = products.find(x=>x.id===id); const line = document.createElement('div'); line.style='display:flex;justify-content:space-between;margin:8px 0'; line.innerHTML = `<div>${p.title} × ${cart[id]}</div><div>${money(p.price*cart[id])}</div>`; summaryListEl.appendChild(line); subtotal+=p.price*cart[id]; }
+  subtotalEl.textContent = money(subtotal);
+  const delivery = (document.getElementById('fulfillment').value==='delivery' && subtotal>0)?300:0;
+  deliveryFeeEl.textContent = money(delivery);
+  totalEl.textContent = money(subtotal+delivery);
+}
+
+renderProducts(); updateSummary();
+
+// search & filter handlers
+const chips = document.querySelectorAll('.chip'); chips.forEach(c=> c.onclick = ()=>{ chips.forEach(x=>x.style.background=''); c.style.background='#fff7f0'; renderProducts(c.dataset.filter, document.getElementById('q').value); });
+
+const qEl = document.getElementById('q'); const clearSearch = document.getElementById('clearSearch');
+qEl.oninput = ()=>{ const v=qEl.value; clearSearch.style.display = v? 'inline-block':'none'; renderProducts(document.querySelector('.chip[style*="background:#fff7f0"]')?.dataset?.filter||'all', v); }
+clearSearch.onclick = ()=>{ qEl.value=''; clearSearch.style.display='none'; renderProducts(); }
+
+// order helpers
+function generateOrderID(){ const now=new Date(); const y=now.getFullYear(); const m=String(now.getMonth()+1).padStart(2,'0'); const d=String(now.getDate()).padStart(2,'0'); const rand=Math.floor(10000+Math.random()*90000); return `${y}${m}${d}-MJCO-${rand}`; }
+
+function gatherOrderData(){
+  const name=document.getElementById('name').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const fulfillment=document.getElementById('fulfillment').value;
+  const addr=document.getElementById('address').value.trim();
+  const instructions=document.getElementById('instructions').value.trim();
+  const deliveryTime=document.getElementById('deliveryTime').value||null;
+
+  const items=[]; let subtotal=0;
+  for(const id in cart){ if(cart[id]<=0) continue; const p = products.find(x=>x.id===id); items.push({id:p.id,title:p.title,price:p.price,qty:cart[id]}); subtotal+=p.price*cart[id]; }
+  if(items.length===0) throw new Error('Cart is empty');
+  if(!name) throw new Error('Name is required');
+  if(!phone) throw new Error('Phone is required');
+  const deliveryFee = (fulfillment==='delivery')?300:0;
+
+  return {
+    orderID: generateOrderID(), name, phone, fulfillment, address: fulfillment==='delivery'?(addr||'Not provided'):'Pickup', instructions, deliveryTime, items, subtotal, deliveryFee, total:subtotal+deliveryFee, timestamp:Date.now(), status:'pending'
+  };
+}
+
+async function saveOrder(order){ const ref = push(dbRef(db,'orders')); await set(ref, order); return order.orderID; }
+
+// PDF creation (improved layout + logo)
+async function makePDF(order){ const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'pt', format:'a4' }); let y=40; doc.setFontSize(18); doc.text('MJ & CO — Order Receipt',40,y); y+=28; doc.setFontSize(11); doc.text(`Order ID: ${order.orderID}`,40,y); doc.text(`Date: ${new Date(order.timestamp).toLocaleString()}`,350,y); y+=18; doc.text(`Name: ${order.name}`,40,y); y+=14; doc.text(`Phone: ${order.phone}`,40,y); y+=14; doc.text(`Fulfillment: ${order.fulfillment}`,40,y); y+=14; doc.text(`Address: ${order.address}`,40,y); y+=18; doc.setFontSize(12); doc.text('Items:',40,y); y+=14; doc.setFontSize(11);
+  order.items.forEach(it=>{ doc.text(`${it.title} x${it.qty}`,40,y); doc.text(money(it.price*it.qty),440,y); y+=14; if(y>750){ doc.addPage(); y=40 } });
+  y+=8; doc.text(`Subtotal: ${money(order.subtotal)}`,40,y); y+=14; doc.text(`Delivery: ${money(order.deliveryFee)}`,40,y); y+=14; doc.text(`Total: ${money(order.total)}`,40,y); y+=20; doc.text('BANK PAYMENT DETAILS:',40,y); y+=14; doc.text(`Account Name: ${BANK.accountName}`,40,y); y+=12; doc.text(`Account Number: ${BANK.accountNumber}`,40,y); y+=12; doc.text(`Bank: ${BANK.bankName}`,40,y); y+=18; doc.setFontSize(10); doc.text('Send your payment receipt + Order ID to WhatsApp: +2348102341648',40,y,{maxWidth:500});
+  return doc.output('blob'); }
+
+function openWA(text){ window.open('https://web.whatsapp.com/send?phone=2348102341648&text='+encodeURIComponent(text),'_blank'); }
+
+// Buttons
+const btnPDF = document.getElementById('placeOrderBtn');
+const btnPOD = document.getElementById('saveOrderBtn');
+const waBtn = document.getElementById('openWhatsAppBtn');
+const previewBtn = document.getElementById('previewPdfBtn');
+
+btnPDF.onclick = async ()=>{
+  try{
+    orderStatusEl.textContent = 'Processing...';
+    const order = gatherOrderData();
+    const orderID = await saveOrder(order);
+    const pdfBlob = await makePDF(order);
+    const url = URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a'); a.href=url; a.download=`${orderID}.pdf`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+
+    waBtn.style.display='inline-flex'; waBtn.onclick = ()=> openWA(`Hello, I placed an order. ID: ${orderID}. Here is my payment receipt.`);
+    orderStatusEl.innerHTML = `<span style="color:green;font-weight:700">Order created successfully.<br>Order ID: ${orderID}</span>`;
+    Object.keys(cart).forEach(id=>{ cart[id]=0; const el=document.getElementById('qty-'+id); if(el) el.textContent='0'; }); updateSummary();
+  }catch(e){ orderStatusEl.innerHTML = `<span style="color:#b91c1c;font-weight:700">${e.message||e}</span>`; }
+}
+
+btnPOD.onclick = async ()=>{
+  try{
+    orderStatusEl.textContent = 'Processing Pay-on-Delivery...';
+    const order = gatherOrderData(); order.paymentMethod='Pay on Delivery';
+    const orderID = await saveOrder(order);
+    waBtn.style.display='inline-flex'; waBtn.onclick = ()=> openWA(`Hello, I placed a Pay-on-Delivery order. ID: ${orderID}.`);
+    orderStatusEl.innerHTML = `<span style="color:green;font-weight:700">Order placed (P.O.D). ID: ${orderID}</span>`;
+    Object.keys(cart).forEach(id=>{ cart[id]=0; const el=document.getElementById('qty-'+id); if(el) el.textContent='0'; }); updateSummary();
+  }catch(e){ orderStatusEl.innerHTML = `<span style="color:#b91c1c;font-weight:700">${e.message||e}</span>`; }
+}
+
+previewBtn.onclick = async ()=>{
+  try{ const order = gatherOrderData(); const blob = await makePDF(order); const url = URL.createObjectURL(blob); window.open(url,'_blank'); }catch(e){ orderStatusEl.innerHTML = `<span style="color:#b91c1c;font-weight:700">${e.message||e}</span>`; } }
+
+// init sample media video playback
+document.querySelectorAll('video').forEach(v=>{ v.play().catch(()=>{}); v.style.objectFit='cover'; });
+
+</script>
+
+<script>
+// Improved Standard PDF Generator
+function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+  const logo = new Image();
+  logo.src = 'your-logo.png'; // Replace
+
+  logo.onload = () => {
+    doc.addImage(logo, 'PNG', 40, 30, 60, 60);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(10, 80, 160);
+    doc.text('MJ & CO - Order Summary', 120, 65);
+
+    const tableColumn = ['Item', 'Qty', 'Price', 'Total'];
+    const tableRows = [];
+
+    cart.forEach(i => {
+      tableRows.push([
+        i.name,
+        i.quantity.toString(),
+        `₦${i.price.toLocaleString()}`,
+        `₦${(i.price * i.quantity).toLocaleString()}`
+      ]);
+    });
+
+    doc.autoTable({
+      startY: 120,
+      head: [tableColumn],
+      body: tableRows,
+      styles: { font: 'helvetica', fontSize: 11, cellPadding: 6 },
+      headStyles: { fillColor: [10, 80, 160], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [245,245,245] }
+    });
+
+    const finalY = doc.lastAutoTable.finalY + 30;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text(`Grand Total: ₦${getTotal().toLocaleString()}`, 40, finalY);
+    doc.save('MJCO_order.pdf');
+  };
+}
+</script>
+</body>
+</html>
